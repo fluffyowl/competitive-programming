@@ -10,7 +10,7 @@ import pandas
 USER_ID = '2392'
 SLEEP_SEC = 5
 SUBMISSIONS_URL = 'http://yukicoder.me/users/'+USER_ID+'/submissions'
-file_prefix = 'yuki-'
+file_prefix = 'yuki_'
 EXT = {'Python2':'.py',
        'PyPy2':'.py',
        'C++11':'.cc',
