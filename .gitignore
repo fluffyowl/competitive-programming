@@ -121,9 +121,6 @@ docs/
 
 ### https://raw.github.com/github/gitignore/9adba1f732d0912cba9ed829f2a6dd7f76dadf66/c++.gitignore
 
-# Prerequisites
-*.d
-
 # Compiled Object files
 *.slo
 *.lo
