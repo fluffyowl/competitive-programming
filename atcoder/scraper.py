@@ -7,7 +7,7 @@ import pandas
 import json
 import pyquery
 
-SLEEP_SEC = 5
+SLEEP_SEC = 1
 EXT = [('Py', '.py'),
        ('C++', '.cc'),
        ('D ', '.d'),
