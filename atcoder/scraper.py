@@ -65,4 +65,5 @@ if __name__ == '__main__':
             source = pyquery.PyQuery('http://' + contest + '.contest.atcoder.jp/submissions/' + r['submission_id'])
             time.sleep(SLEEP_SEC)
             with open(filename, 'w') as f:
-                f.write(source.find('pre').text().replace('\r\n', '\n')+'\n')
+                s = source.find('pre').text().replace('\r\n', '\n')+'\n'
+                f.write(s.encode('utf8'))
