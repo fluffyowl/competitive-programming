@@ -70,8 +70,11 @@ class DistanceZeroAndOne {
         REP(i, N) dist[i][i] = INF;
 
         bool possible = dfs(1);
+        if (possible) {
 
-        return vector<string>();
+        }
+        else
+            return vector<string>();
     }
 };
 
