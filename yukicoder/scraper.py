@@ -13,8 +13,9 @@ SUBMISSIONS_URL = 'http://yukicoder.me/users/'+USER_ID+'/submissions'
 file_prefix = 'yuki_'
 EXT = {'Python2': '.py',
        'PyPy2': '.py',
-       'C++11': '.cc',
-       'C++14': '.cc',
+       'C++11': '.cpp',
+       'C++14': '.cpp',
+       u'C++17(1z）': '.cpp',
        'D': '.d',
        'Bash': '.sh',
        'Text': '.txt'}
