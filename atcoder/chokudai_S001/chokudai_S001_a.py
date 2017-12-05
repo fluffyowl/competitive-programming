@@ -1,0 +1,5 @@
+N = input()
+A = map(int, raw_input().split())
+print max(A) N = input()
+A = map(int, raw_input().split())
+print max(A)

@@ -1,0 +1,7 @@
+N = input()
+#A = map(int, raw_input().split())
+A = raw_input().split()
+print ','.join(A) N = input()
+#A = map(int, raw_input().split())
+A = raw_input().split()
+print ','.join(A)
