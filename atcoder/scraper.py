@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-
 import os
 import time
-import urllib2
-import pandas
+import urllib
 import json
 import pyquery
+
 
 SLEEP_SEC = 1
 EXT = [('Py', '.py'),
@@ -13,57 +11,63 @@ EXT = [('Py', '.py'),
        ('D ', '.d'),
        ('Bash', '.sh'),
        ('Text', '.txt'),
-       ('Awk', '.awk')]
-USER_NAME = 'nebukuro09'
-CONTEST_BASE_URL = '.contest.atcoder.jp/submissions/all?status=AC&user_screen_name='
+       ('Awk', '.awk'),
+       ('C ', '.c')]
+DEFAULT_USER_ID = 'nebukuro09'
+API = 'http://beta.kenkoooo.com/atcoder/atcoder-api/results?user='
+CONTEST_BASE_URL = 'https://beta.atcoder.jp/contests/%s/submissions/%s'
+WORK_DIR = os.getcwd()
 
 
 def get_lang_ext(lang_str):
     for suffix, ext in EXT:
         if lang_str.startswith(suffix):
             return ext
+    print(lang_str)
     assert(False)
 
 
-def get_contest_IDs():
-    return [i['id'] for i in json.loads(urllib2.urlopen('http://kenkoooo.com/atcoder/json/contests.json').read())]
+def get_submissions_json(user_id):
+    url = API + user_id
+    req = urllib.request.Request(url)
+    with urllib.request.urlopen(req) as response:
+        submissions_json = response.read()
+    return submissions_json
 
 
-def get_my_submissions(contest_id, user_id):
-    url = 'http://' + contest_id + CONTEST_BASE_URL + user_id
-    try:
-        df = pandas.io.html.read_html(url, encoding='utf-8')[0]
-    except ValueError:
-        return pandas.DataFrame()
+def scrape_submission(submission):
+    if submission['result'] != 'AC':
+        return False
+    if os.path.exists(submission['dest']):
+        return False
+
+    if not os.path.exists(os.path.join(WORK_DIR, submission['contest_id'])):
+        os.mkdir(submission['contest_id'])
+
+    print(submission['problem_id'])
+
+    source = pyquery.PyQuery(CONTEST_BASE_URL %
+                             (submission['contest_id'],
+                              submission['id']))
+
+    with open(os.path.join(submission['dest']), 'w') as f:
+        s = source.find('pre').text().replace('\r\n', '\n')+'\n'
+        f.write(s)
+
     time.sleep(SLEEP_SEC)
-    d = pyquery.PyQuery(url)
-    time.sleep(SLEEP_SEC)
-    df['problem_id'] = pandas.Series(pyquery.PyQuery(a).attr('href').replace('/tasks/', '') for a in d.find('tbody > tr > td > a')[::4])
-    df['submission_id'] = pandas.Series(pyquery.PyQuery(a).attr('href').replace('/submissions/', '') for a in d.find('tbody > tr > td > a')[3::4])
-    return df
+    return True
+
+
+def main(user_id=DEFAULT_USER_ID):
+    submissions_json = get_submissions_json(user_id)
+    submissions = json.loads(submissions_json)
+    cnt = 0
+    for sub in submissions:
+        sub['filename'] = sub['problem_id'] + get_lang_ext(sub['language'])
+        sub['dest'] = os.path.join(WORK_DIR, sub['contest_id'], sub['filename'])
+        cnt += scrape_submission(sub)
+    print('Scraped ' + str(cnt) + ' submissions')
 
 
 if __name__ == '__main__':
-    contest_ids = get_contest_IDs()
-    workdir = os.getcwd()
-    for contest in contest_ids:
-        os.chdir(workdir)
-        print contest
-        if not os.path.exists(contest):
-            os.mkdir(contest)
-        os.chdir(contest)
-        df = get_my_submissions(contest, USER_NAME)
-        if df.empty:
-            continue
-        for i, r in df.iterrows():
-            filename = r['problem_id'] + get_lang_ext(r[u'Language言語'])
-            print '    ' + filename,
-            if os.path.exists(filename):
-                print 'skipped'
-                continue
-            print
-            source = pyquery.PyQuery('http://' + contest + '.contest.atcoder.jp/submissions/' + r['submission_id'])
-            time.sleep(SLEEP_SEC)
-            with open(filename, 'w') as f:
-                s = source.find('pre').text().replace('\r\n', '\n')+'\n'
-                f.write(s.encode('utf8'))
+    main()
