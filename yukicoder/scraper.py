@@ -18,7 +18,17 @@ EXT = {'Python2': '.py',
        u'C++17(1z）': '.cpp',
        'D': '.d',
        'Bash': '.sh',
-       'Text': '.txt'}
+       'Text': '.txt',
+       'Kotlin': '.kt',
+       'Perl': '.pl',
+       'JavaScript': '.js',
+       'Vim script': '.vim',
+       'F#': '.fs',
+       'Haskell': '.hs',
+       'Lua': '.lua',
+       'Ruby': '.rb',
+       'Scheme': '.scm',
+       'Elixir': '.ex'}
 TESTJSON = 'test.json'
 
 
