@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define REP(i,n) for (int i=0;i<(n);i++)
+#define REP2(i,m,n) for (int i=m;i<(n);i++)
+typedef long long ll;
+typedef long double ld;
+
+unordered_map<int, double> trans[1<<14];
+double dp[2][1<<14];
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+
+    const int T = 14;
+    int N;
+    double P[3];
+    cin >> N;
+    REP(i, 3) cin >> P[i], P[i] /= 100.0;
+
+    for (int m1 = 0; m1 < (1 << T); ++m1) {
+        for(int m2 = m1; m2 >= 0; --m2) {
+            m2 &= m1;
+            double tmp = 1;
+            for (int i = 0; i < T; ++i) {
+                if ((1 << i) & m1) {
+                    bool l = (i != 0) && ((1 << (i-1)) & m1);
+                    bool r = (i != T-1) && ((1 << (i+1)) & m1);
+                    double safe;
+                    if (l && r)
+                        safe = 1 - P[2];
+                    else if (l || r)
+                        safe = 1 - P[1];
+                    else
+                        safe = 1 - P[0];
+                    tmp *=  ((1 << i) & m2) ? safe : 1 - safe;
+                }
+            }
+            trans[m1][m2] = tmp;
+        }
+    }
+
+    REP(i, 2) REP(j, 1<<T) dp[i][j] = 0;
+    dp[0][(1<<T)-1] = 1;
+    int cur = 0, tar = 1;
+
+    REP(i, 80-N) {
+        REP(j, 1<<T)
+            dp[tar][j] = 0;
+        REP(m1, 1<<T) {
+            if (dp[cur][m1] == 0)
+                continue;
+            for (auto itr: trans[m1])
+                dp[tar][itr.first] += dp[cur][m1] * itr.second;
+        }
+        swap(cur, tar);
+    }
+
+    double ans = 0;
+    REP(mask, 1<<T)
+        ans += dp[cur][mask] * __builtin_popcount(mask);
+    cout.precision(20);
+    cout << fixed  << ans*2 << endl;
+}
+
+

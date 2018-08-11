@@ -1,0 +1,6 @@
+L = int(raw_input())
+A = int(raw_input())
+B = int(raw_input())
+C = int(raw_input())
+D = int(raw_input())
+print L - max((A-1)/C+1, (B-1)/D+1)
