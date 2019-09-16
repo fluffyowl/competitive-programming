@@ -12,10 +12,12 @@ SLEEP_SEC = 5
 SUBMISSIONS_URL = 'http://yukicoder.me/users/'+USER_ID+'/submissions'
 file_prefix = 'yuki_'
 EXT = {'Python2': '.py',
+       'Python3': '.py',
        'PyPy2': '.py',
+       'PyPy3': '.py',
        'C++11': '.cpp',
        'C++14': '.cpp',
-       u'C++17(1z）': '.cpp',
+       u'C++17(1z)': '.cpp',
        'C++17(clang Beta)': 'cpp',
        'D': '.d',
        'Bash': '.sh',
